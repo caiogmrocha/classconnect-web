@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { perfisService } from '@/services/PerfisService'
 
 const isLoading = ref(false)
 
@@ -26,11 +27,31 @@ const { handleSubmit } = useForm({
   },
 })
 
-const onSubmit = handleSubmit((values) => {
-	isLoading.value = true;
-	setTimeout(() => {
+const onSubmit = handleSubmit(async (values) => {
+	try {
+		isLoading.value = true;
+
+		const response = await perfisService.login({
+			email: values.email,
+			senha: values.senha,
+		});
+
+		console.log(response);
+	} catch (error) {
+		switch (error.response?.status) {
+			case 403:
+				console.log('Usuário ou senha inválidos');
+				break;
+			case 400:
+				console.log('E-mail ou senha em formato inválido');
+				break;
+			default:
+				console.error(error);
+				break;
+		}
+	} finally {
 		isLoading.value = false;
-	}, 2000)
+	}
 })
 </script>
 
