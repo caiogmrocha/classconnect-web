@@ -40,13 +40,11 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		switch (error.response?.status) {
 			case 403:
-				console.log('Usuário ou senha inválidos');
-				break;
 			case 400:
-				console.log('E-mail ou senha em formato inválido');
+				alert('E-mail ou senha inválidos');
 				break;
 			default:
-				console.error(error);
+				alert('Erro ao tentar fazer login');
 				break;
 		}
 	} finally {
