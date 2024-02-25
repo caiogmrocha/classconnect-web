@@ -11,6 +11,12 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-vue-next": "^0.338.0",
+    "radix-vue": "^1.4.8",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },
