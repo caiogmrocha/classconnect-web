@@ -47,9 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
 		alert(response.mensagem);
 
 		router.push({ name: 'login' });
-
-		console.log(response);
-	} catch (error) {
+	} catch (error: any) {
 		switch (error.response?.status) {
 			case 403:
 			case 400:
