@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import {  useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -66,13 +66,13 @@ const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
   
   try {
-    await salasService.cadastrar({
+    const response = await salasService.cadastrar({
       nome: values.nome,
       descricao: values.descricao,
       banner: values.banner,
     });
 
-    toast({ title: 'Sala cadastrada com sucesso!' })
+    toast({ title: response.mensagem })
   } catch (error) {
     toast({ title: 'Erro ao cadastrar sala!', variant: 'destructive' })
   } finally {
