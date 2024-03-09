@@ -1,142 +1,145 @@
-<script lang="ts" setup>
-
+<script setup lang="ts">
 import { ref } from 'vue'
-import Nav, { type LinkProp } from '@/components/custom/Nav.vue'
-import { cn } from '@/lib/utils'
+import {  useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+
+import { Input } from '@/components/ui/input'
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
-import { TooltipProvider } from '@/components/ui/tooltip'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/toast'
+import { Loader2 } from 'lucide-vue-next'
+import { salasService } from '@/services/SalasService'
 
-interface MailProps {
-  defaultLayout?: number[]
-  defaultCollapsed?: boolean
-  navCollapsedSize: number
-}
+const profileFormSchema = toTypedSchema(z.object({
+  nome: z
+    .string()
+    .min(2, {
+      message: 'O nome deve ter no mínimo 2 caracteres.',
+    })
+    .max(30, {
+      message: 'O nome deve ter no máximo 30 caracteres.',
+    }),
+  descricao: z
+    .string()
+    .min(2, {
+      message: 'A descrição deve ter no mínimo 2 caracteres.',
+    })
+    .max(100, {
+      message: 'A descrição deve ter no máximo 255 caracteres.',
+  }),
+  banner: z
+    .any()
+    .refine((value?: File) => {
+      if (!value) return true;
+      
+      const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+      
+      return acceptedFormats.includes(value.type);
+    }, {
+      message: 'O arquivo deve ser uma imagem PNG, JPEG, JPG ou GIF.',
+    })
+    .refine((value: File) => {
+      if (!value) return true;
 
-const props = withDefaults(defineProps<MailProps>(), {
-  defaultCollapsed: false,
-  defaultLayout: () => [265, 440, 655],
+      return value.size <= 5000000;
+    }, {
+      message: 'O arquivo deve ter no máximo 5MB.',
+    })
+    .nullable(),
+}))
+
+const { handleSubmit } = useForm({
+  validationSchema: profileFormSchema,
+  initialValues: {
+    nome: '',
+    descricao: '',
+    banner: null,
+  },
 })
 
-const isCollapsed = ref(props.defaultCollapsed)
+const isLoading = ref(false)
 
-const links: LinkProp[] = [
-  {
-    title: 'Inbox',
-    label: '128',
-    icon: 'lucide:inbox',
-    variant: 'default',
-  },
-  {
-    title: 'Drafts',
-    label: '9',
-    icon: 'lucide:file',
-    variant: 'ghost',
-  },
-  {
-    title: 'Sent',
-    label: '',
-    icon: 'lucide:send',
-    variant: 'ghost',
-  },
-  {
-    title: 'Junk',
-    label: '23',
-    icon: 'lucide:archive',
-    variant: 'ghost',
-  },
-  {
-    title: 'Trash',
-    label: '',
-    icon: 'lucide:trash',
-    variant: 'ghost',
-  },
-  {
-    title: 'Archive',
-    label: '',
-    icon: 'lucide:archive',
-    variant: 'ghost',
-  },
-]
+const onSubmit = handleSubmit(async (values) => {
+  isLoading.value = true
+  
+  try {
+    const response = await salasService.cadastrar({
+      nome: values.nome,
+      descricao: values.descricao,
+      banner: values.banner,
+    });
 
-const links2: LinkProp[] = [
-  {
-    title: 'Social',
-    label: '972',
-    icon: 'lucide:user-2',
-    variant: 'ghost',
-  },
-  {
-    title: 'Updates',
-    label: '342',
-    icon: 'lucide:alert-circle',
-    variant: 'ghost',
-  },
-  {
-    title: 'Forums',
-    label: '128',
-    icon: 'lucide:message-square',
-    variant: 'ghost',
-  },
-  {
-    title: 'Shopping',
-    label: '8',
-    icon: 'lucide:shopping-cart',
-    variant: 'ghost',
-  },
-  {
-    title: 'Promotions',
-    label: '21',
-    icon: 'lucide:archive',
-    variant: 'ghost',
-  },
-]
-
-function onCollapse() {
-  isCollapsed.value = true
-}
-
-function onExpand() {
-  isCollapsed.value = false
-}
+    toast({ title: response.mensagem })
+  } catch (error) {
+    toast({ title: 'Erro ao cadastrar sala!', variant: 'destructive' })
+  } finally {
+    isLoading.value = false
+  }
+})
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="0">
-    <ResizablePanelGroup
-      id="resize-panel-group-1"
-      direction="horizontal"
-      class="h-full max-h-[800px] items-stretch"
-    >
-      <ResizablePanel
-        id="resize-panel-1"
-        :default-size="defaultLayout[0]"
-        :collapsed-size="navCollapsedSize"
-        collapsible
-        :min-size="15"
-        :max-size="20"
-        :class="cn(isCollapsed && 'min-w-[50px] transition-all duration-300 ease-in-out')"
-        @expand="onExpand"
-        @collapse="onCollapse"
-      >
-        <Nav
-          :is-collapsed="isCollapsed"
-          :links="links"
-        />
-        <Separator />
-        <Nav
-          :is-collapsed="isCollapsed"
-          :links="links2"
-        />
-      </ResizablePanel>
-      <ResizableHandle id="resize-handle-1" with-handle />
-      <ResizablePanel id="resize-panel-2" :default-size="defaultLayout[1]" :min-size="30">
-        <h1>HelloWorld</h1>
-      </ResizablePanel>
-      <ResizableHandle id="resiz-handle-2" with-handle />
-      <ResizablePanel id="resize-panel-3" :default-size="defaultLayout[2]">
-      <h1>HelloWorld</h1>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  </TooltipProvider>
+  <main class="h-full flex-1 p-5">
+    <div>
+      <h3 class="text-lg font-medium mb-3">
+        Cadastrar Sala
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        Preencha o formulário abaixo para cadastrar uma nova sala.
+      </p>
+    </div>
+
+    <Separator class="my-3"/>
+
+    <form class="space-y-8" @submit="onSubmit">
+      <FormField v-slot="{ componentField }" name="nome">
+        <FormItem>
+          <FormLabel>Nome</FormLabel>
+          <FormControl>
+            <Input type="text" placeholder="Programação Orientada a Objetos, Algebra Linear ..." v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            Esse será o nome que aparecerá para os outros usuários.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="descricao">
+        <FormItem>
+          <FormLabel>Descrição</FormLabel>
+          <FormControl>
+            <Textarea placeholder="Esta sala é para ..." v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            Crie uma descrição explicando mais detalhes sobre a sala.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ handleChange, handleBlur }" name="banner">
+        <FormItem>
+          <FormLabel>Banner</FormLabel>
+          <FormControl>
+            <Input type="file" @change="handleChange" @blur="handleBlur" accept="image/png,image/jpeg,image/jpg,image/gif" />
+          </FormControl>
+          <FormDescription>
+            Esta imagem será exibida como banner da sala.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      
+      <div class="flex gap-2 justify-start">
+        <Button type="submit" :disabled="isLoading">
+          <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
+          Salvar
+        </Button>
+      </div>
+    </form>
+  </main>
 </template>

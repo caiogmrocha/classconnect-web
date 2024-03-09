@@ -14,6 +14,8 @@ type CadastroData = {
 
 class PerfisService {
 	async login({ email, senha }: LoginData) {
+		localStorage.removeItem("token");
+
 		const response = await http.post("/perfis/login", { email, senha });
 
 		localStorage.setItem("token", response.data.token);
