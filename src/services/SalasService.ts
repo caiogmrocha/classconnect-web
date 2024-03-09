@@ -1,12 +1,12 @@
 import { http } from "@/lib/http";
 
-export type CadastrarSalaData = {
+export type CadastrarSalaRequest = {
     nome: string;
     descricao: string;
     banner: File;
 }
 
-export type ListarSalasData = {
+export type ListarSalasResponse = {
     id: number,
     nome: string,
     descricao: string,
@@ -17,8 +17,12 @@ export type ListarSalasData = {
     },
 }
 
+export type BuscarSalaPorIdRequest = {
+    id: number;
+}
+
 export class SalasService {
-    async cadastrar(data: CadastrarSalaData) {
+    async cadastrar(data: CadastrarSalaRequest) {
         const formData = new FormData();
      
         formData.append('nome', data.nome);
@@ -34,8 +38,14 @@ export class SalasService {
         return response.data;
     }
 
-    async listar(): Promise<ListarSalasData[]> {
+    async listar(): Promise<ListarSalasResponse[]> {
         const response = await http.get('/salas');
+
+        return response.data;
+    }
+
+    async buscarPorId({ id }: BuscarSalaPorIdRequest): Promise<ListarSalasResponse> {
+        const response = await http.get(`/salas/${id}`);
 
         return response.data;
     }

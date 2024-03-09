@@ -35,6 +35,11 @@ const router = createRouter({
           name: 'salas',
           component: () => import('../views/salas/ListagemView/index.vue'),
         },
+        {
+          path: '/salas/:id',
+          name: 'salas-publicacoes',
+          component: () => import('../views/salas/publicacoes/ListagemView/index.vue'),
+        },
       ]
     },
   ]
