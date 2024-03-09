@@ -91,7 +91,7 @@ const links2: LinkProp[] = [
 </script>
 
 <template>
-  <div class="flex items-start gap-4">
+  <div class="flex items-start">
     <aside class="w-[20vw] h-full border-r border-r-gray-400">
       <Nav
         :is-collapsed="isCollapsed"

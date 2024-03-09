@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/toast";
-import { salasService, type ListarSalasData } from "@/services/SalasService";
-
 import { onMounted, ref } from "vue";
 
-const salas = ref<ListarSalasData[]>([]);
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/toast";
+import { salasService, type ListarSalasResponse } from "@/services/SalasService";
+
+const salas = ref<ListarSalasResponse[]>([]);
 
 onMounted(async () => {
     try {
