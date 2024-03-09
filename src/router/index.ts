@@ -29,7 +29,12 @@ const router = createRouter({
           path: '/salas/cadastrar',
           name: 'cadastrar-sala',
           component: () => import('../views/salas/CadastrarView/index.vue'),
-        }
+        },
+        {
+          path: '/salas',
+          name: 'salas',
+          component: () => import('../views/salas/ListagemView/index.vue'),
+        },
       ]
     },
   ]
