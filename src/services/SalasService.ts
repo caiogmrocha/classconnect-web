@@ -1,9 +1,20 @@
 import { http } from "@/lib/http";
 
-type CadastrarSalaData = {
+export type CadastrarSalaData = {
     nome: string;
     descricao: string;
     banner: File;
+}
+
+export type ListarSalasData = {
+    id: number,
+    nome: string,
+    descricao: string,
+    professor: {
+        id: number,
+        nome: string,
+        email: string
+    },
 }
 
 export class SalasService {
@@ -20,6 +31,12 @@ export class SalasService {
             }
         });
      
+        return response.data;
+    }
+
+    async listar(): Promise<ListarSalasData[]> {
+        const response = await http.get('/salas');
+
         return response.data;
     }
 }
