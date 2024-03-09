@@ -21,11 +21,17 @@ const router = createRouter({
       name: 'cadastrar-perfil',
       component: () => import('../views/perfis/RegisterView/index.vue')
     },
-		{
-			path: '/salas/cadastrar',
-			name: 'cadastrar-sala',
-			component: () => import('../views/salas/CadastrarView/index.vue')
-		}
+    {
+      path: '/salas',
+      component: () => import('../components/layouts/BaseLayout.vue'),
+      children: [
+        {
+          path: '/salas/cadastrar',
+          name: 'cadastrar-sala',
+          component: () => import('../views/salas/CadastrarView/index.vue')
+        }
+      ]
+    },
   ]
 })
 
