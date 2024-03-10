@@ -30,7 +30,7 @@ export type PublicarRequest = {
   arquivos: File[]
 }
 
-export type PublicarResponse = {
+export type PadraoResponse = {
   mensagem: string
 }
 
@@ -67,6 +67,14 @@ export type BuscarPublicacaoPorIdResponse = {
   }>,
 }
 
+export type ResponderAtividadeRequest = {
+  idSala: number,
+  idPublicacao: number,
+  titulo: string,
+  conteudo: string,
+  arquivos: File[]
+}
+
 export class PublicacoesService {
   async listar({ idSala }: ListarPublicacoesRequest): Promise<ListarPublicacoesResponse[]> {
     const response = await http.get(`/salas/${idSala}/posts`);
@@ -80,7 +88,7 @@ export class PublicacoesService {
     return response.data;
   }
 
-  async publicar({ idSala, titulo, conteudo, dataEntrega, arquivos }: PublicarRequest): Promise<PublicarResponse> {
+  async publicar({ idSala, titulo, conteudo, dataEntrega, arquivos }: PublicarRequest): Promise<PadraoResponse> {
     const formData = new FormData();
 
     formData.append('titulo', titulo);
@@ -94,6 +102,20 @@ export class PublicacoesService {
     }
 
     const response = await http.post(`/salas/${idSala}/posts`, formData);
+
+    return response.data;
+  }
+
+  async responderAtividade({ idSala, idPublicacao, titulo, conteudo, arquivos }: ResponderAtividadeRequest): Promise<PadraoResponse> {
+    const formData = new FormData();
+
+    formData.append('titulo', titulo);
+    formData.append('conteudo', conteudo);
+    arquivos.forEach(arquivo => {
+      formData.append('arquivos', arquivo);
+    });
+
+    const response = await http.post(`/salas/${idSala}/posts/${idPublicacao}/respostas`, formData);
 
     return response.data;
   }
