@@ -1,29 +1,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Check } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Icon } from '@iconify/vue/dist/iconify.js';
 
-import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardDescription from '@/components/ui/card/CardDescription.vue';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
-import { publicacoesService, type BuscarPublicacaoPorIdResponse } from '@/services/PublicacoesService';
-import { toast } from '@/components/ui/toast';
-import { FileFlag } from '@/components/custom/file-flag';
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue';
 import Table from '@/components/ui/table/Table.vue';
-import TableCaption from '@/components/ui/table/TableCaption.vue';
-import TableHeader from '@/components/ui/table/TableHeader.vue';
-import TableHead from '@/components/ui/table/TableHead.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
-import { Icon } from '@iconify/vue/dist/iconify.js';
 import Separator from '@/components/ui/separator/Separator.vue';
+import { toast } from '@/components/ui/toast';
+import { FileFlag } from '@/components/custom/file-flag';
+import { publicacoesService, type BuscarPublicacaoPorIdResponse } from '@/services/PublicacoesService';
 
 const publicacao = ref<BuscarPublicacaoPorIdResponse>();
 
