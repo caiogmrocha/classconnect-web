@@ -10,9 +10,16 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
-import { Loader2 } from 'lucide-vue-next'
+import { CalendarIcon, Loader2 } from 'lucide-vue-next'
 import { publicacoesService } from '@/services/PublicacoesService'
 import { useRoute } from 'vue-router'
+import Popover from '@/components/ui/popover/Popover.vue'
+import PopoverTrigger from '@/components/ui/popover/PopoverTrigger.vue'
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import PopoverContent from '@/components/ui/popover/PopoverContent.vue'
+import Calendar from '@/components/ui/calendar/Calendar.vue'
+import { ptBR } from 'date-fns/locale'
 
 const postFormSchema = toTypedSchema(z.object({
   titulo: z
@@ -33,6 +40,13 @@ const postFormSchema = toTypedSchema(z.object({
   }),
   dataEntrega: z
     .date()
+    .refine((value) => {
+      if (!value) return true;
+
+      return value >= new Date();
+    }, {
+      message: 'A data de entrega deve ser maior ou igual a data atual.',
+    })
     .nullable(),
   arquivos: z
     .array(z
@@ -123,25 +137,62 @@ const onSubmit = handleSubmit(async (values) => {
     <Separator class="my-3"/>
 
     <form class="space-y-8" @submit="onSubmit">
-      <FormField v-slot="{ componentField }" name="titulo">
-        <FormItem>
-          <FormLabel>Título</FormLabel>
-          <FormControl>
-            <Input type="text" placeholder="Atividade 1, Material 2 ..." v-bind="componentField" />
-          </FormControl>
-          <FormDescription>
-            Esse será o título que aparecerá no feed de publicações.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+      <div class="grid grid-cols-2 gap-4">
+        <FormField v-slot="{ componentField }" name="titulo">
+          <FormItem>
+            <FormLabel>Título</FormLabel>
+
+            <FormControl>
+              <Input type="text" placeholder="Atividade 1, Material 2 ..." v-bind="componentField" />
+            </FormControl>
+
+            <FormDescription>
+              Esse será o título que aparecerá no feed de publicações.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField, value }" name="dataEntrega">
+          <FormItem class="flex flex-col mt-1">
+            <FormLabel class="mb-1">Data de Entrega</FormLabel>
+
+            <Popover>
+              <PopoverTrigger as-child>
+                <FormControl>
+                  <Button
+                    variant="outline" :class="cn(
+                      'ps-3 text-start font-normal',
+                      !value && 'text-muted-foreground',
+                    )"
+                  >
+                    <span>{{ value ? format(value, "PPP", { locale: ptBR }) : "Clique para selecionar uma data" }}</span>
+                    <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+
+              <PopoverContent class="p-0">
+                <Calendar v-bind="componentField" />
+              </PopoverContent>
+            </Popover>
+
+            <FormDescription>
+              Defina uma data de entrega caso a publicação seja uma atividade.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
 
       <FormField v-slot="{ componentField }" name="conteudo">
         <FormItem>
           <FormLabel>Descrição</FormLabel>
+
           <FormControl>
             <Textarea placeholder="Esta atividade é sobre ..." v-bind="componentField" rows="10" />
           </FormControl>
+
           <FormDescription>
             Crie uma descrição explicando mais detalhes sobre a atividade ou material.
           </FormDescription>
@@ -152,6 +203,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormField v-slot="{ handleChange, handleBlur }" name="arquivos">
         <FormItem>
           <FormLabel>Anexos</FormLabel>
+
           <FormControl>
             <Input type="file" @change="handleChange" @blur="handleBlur" multiple accept="
               text/plain,
@@ -168,6 +220,7 @@ const onSubmit = handleSubmit(async (values) => {
               application/vnd.openxmlformats-officedocument.presentationml.presentatio
             " />
           </FormControl>
+
           <FormDescription>
             Anexe arquivos relacionados a atividade ou material.
           </FormDescription>

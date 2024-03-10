@@ -1,4 +1,5 @@
 import { http } from "@/lib/http"
+import { format } from "date-fns"
 
 export type ListarPublicacoesRequest = {
     idSala: number
@@ -50,7 +51,7 @@ export class PublicacoesService {
         });
 
         if (dataEntrega) {
-            formData.append('dataEntrega', dataEntrega.toISOString());
+            formData.append('dataEntrega', format(dataEntrega, 'yyyy-MM-dd HH:mm:ss'));
         }
 
         const response = await http.post(`/salas/${idSala}/posts`, formData);
