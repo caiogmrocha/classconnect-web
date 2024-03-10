@@ -39,6 +39,20 @@ export type BuscarPublicacaoPorIdRequest = {
   idPublicacao: number
 }
 
+export type AvailableMimetypes =
+  | "text/plain"
+  | "text/html"
+  | "image/png"
+  | "image/jpeg"
+  | "image/jpg"
+  | "application/pdf"
+  | "application/msword"
+  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  | "application/vnd.ms-excel"
+  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  | "application/vnd.ms-powerpoint"
+  | "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
 export type BuscarPublicacaoPorIdResponse = {
 	id: number,
   titulo: string
@@ -48,6 +62,7 @@ export type BuscarPublicacaoPorIdResponse = {
 	conteudo: string,
 	anexos: Array<{
     caminho: string,
+    mimetype: AvailableMimetypes
   }>,
 }
 

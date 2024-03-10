@@ -1,19 +1,6 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-
-type AvailableMimetypes =
-  | "text/plain"
-  | "text/html"
-  | "image/png"
-  | "image/jpeg"
-  | "image/jpg"
-  | "application/pdf"
-  | "application/msword"
-  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  | "application/vnd.ms-excel"
-  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  | "application/vnd.ms-powerpoint"
-  | "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+import type { AvailableMimetypes } from '@/services/PublicacoesService';
 
 type FileFlagProps = {
   mimeType: AvailableMimetypes;
@@ -33,7 +20,7 @@ const props = withDefaults(defineProps<FileFlagProps>(), {
       'from-red-600 to-pink-500': ['application/pdf'].includes(props.mimeType),
     })"
   >
-    <h1 class="font-semibold text-white">
+    <h1 class="font-semibold text-white no-underline">
       {{
         mimeType === "text/plain" || mimeType === "text/html"
           ? "TXT"
