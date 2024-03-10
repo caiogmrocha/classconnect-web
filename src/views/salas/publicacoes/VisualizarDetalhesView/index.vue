@@ -11,13 +11,11 @@ import CardDescription from '@/components/ui/card/CardDescription.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue';
-import Table from '@/components/ui/table/Table.vue';
-import TableCell from '@/components/ui/table/TableCell.vue';
-import TableRow from '@/components/ui/table/TableRow.vue';
 import Separator from '@/components/ui/separator/Separator.vue';
 import { toast } from '@/components/ui/toast';
 import { FileFlag } from '@/components/custom/file-flag';
 import { publicacoesService, type BuscarPublicacaoPorIdResponse } from '@/services/PublicacoesService';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
 const publicacao = ref<BuscarPublicacaoPorIdResponse>();
 
@@ -74,11 +72,10 @@ onMounted(async () => {
           </div>
         </CardHeader>
 
-        <Separator />
+        <Separator v-if="publicacao?.anexos?.length" />
 
-        <CardContent class="grid gap-4 pt-6">
-          <p>
-            {{ publicacao?.conteudo || "" }}
+        <CardContent class="grid gap-4 pt-6" v-if="publicacao?.anexos?.length">
+          <p v-html="publicacao?.conteudo" v-if="publicacao?.conteudo">
           </p>
 
           <Card>

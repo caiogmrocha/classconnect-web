@@ -2,7 +2,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 
 import { toast } from '@/components/ui/toast';
@@ -11,13 +11,14 @@ import { type ListarPublicacoesResponse, publicacoesService } from '@/services/P
 import { type ListarSalasResponse, salasService } from '@/services/SalasService';
 
 const route = useRoute();
+const router = useRouter();
 
 const publicacoes = ref<ListarPublicacoesResponse[]>([]);
 const sala = ref<ListarSalasResponse>();
 
 onMounted(async () => {
   try {
-    sala.value = await salasService.buscarPorId({ id: +route.params.id });
+    sala.value = await salasService.buscarPorId({ id: +route.params.idSala });
   } catch (error) {
     toast({
       title: "Erro ao obter sala",
@@ -26,7 +27,7 @@ onMounted(async () => {
   }
 
   try {
-    publicacoes.value = await publicacoesService.listar({ idSala: +route.params.id });
+    publicacoes.value = await publicacoesService.listar({ idSala: +route.params.idSala });
   } catch (error) {
     toast({
       title: "Erro ao listar publicações",
@@ -51,11 +52,16 @@ onMounted(async () => {
     </header>
 
     <main class="flex flex-col px-80 h-screen w-full py-4 gap-4">
-      <div class="flex flex-row items-center gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent cursor-pointer" v-for="publicacao in publicacoes" :key="publicacao.id">
+      <div
+        v-for="publicacao in publicacoes"
+        :key="publicacao.id"
+        @click="router.push({ name: 'visualizar-publicacao', params: { idSala: route.params.idSala, idPublicacao: publicacao.id } })"
+        class="flex flex-row items-center gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent cursor-pointer"
+      >
         <span class="flex items-center justify-center bg-sky-600 rounded-full p-2 mr-1">
           <Icon icon="fluent:content-view-28-regular" height="30px" class="text-white" />
         </span>
-        
+
         <div class="flex w-full flex-col gap-1">
           <div class="flex items-center">
             <div class="flex items-center gap-2">

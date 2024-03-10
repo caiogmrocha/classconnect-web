@@ -31,21 +31,21 @@ const router = createRouter({
           component: () => import('../views/salas/CadastrarView/index.vue'),
         },
         {
-          path: '/salas/',
+          path: '/salas',
           name: 'salas',
           component: () => import('../views/salas/ListagemView/index.vue'),
-        },
-        {
-          path: '/salas/:id',
-          name: 'salas-publicacoes',
-          component: () => import('../views/salas/publicacoes/ListagemView/index.vue'),
         },
         {
           path: '/salas/:idPublicacao/publicacoes',
           children: [
             {
+              path: '/salas/:idSala/publicacoes',
+              name: 'publicacoes',
+              component: () => import('../views/salas/publicacoes/ListagemView/index.vue'),
+            },
+            {
               path: '/salas/:idPublicacao/publicacoes/publicar',
-              name: 'sala-publicar',
+              name: 'publicar',
               component: () => import('../views/salas/publicacoes/PublicarView/index.vue'),
             },
             {
