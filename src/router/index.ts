@@ -23,7 +23,7 @@ const router = createRouter({
     },
     {
       path: '/salas',
-      component: () => import('../components/layouts/BaseLayout.vue'),
+            component: () => import('../components/layouts/BaseLayout.vue'),
       children: [
         {
           path: '/salas/cadastrar',
@@ -31,7 +31,7 @@ const router = createRouter({
           component: () => import('../views/salas/CadastrarView/index.vue'),
         },
         {
-          path: '/salas',
+          path: '/salas/',
           name: 'salas',
           component: () => import('../views/salas/ListagemView/index.vue'),
         },
@@ -39,6 +39,11 @@ const router = createRouter({
           path: '/salas/:id',
           name: 'salas-publicacoes',
           component: () => import('../views/salas/publicacoes/ListagemView/index.vue'),
+        },
+        {
+          path: '/salas/:id/publicar',
+          name: 'sala-publicar',
+          component: () => import('../views/salas/publicacoes/PublicarView/index.vue'),
         },
       ]
     },
