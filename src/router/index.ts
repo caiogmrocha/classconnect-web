@@ -41,9 +41,19 @@ const router = createRouter({
           component: () => import('../views/salas/publicacoes/ListagemView/index.vue'),
         },
         {
-          path: '/salas/:id/publicar',
-          name: 'sala-publicar',
-          component: () => import('../views/salas/publicacoes/PublicarView/index.vue'),
+          path: '/salas/:idPublicacao/publicacoes',
+          children: [
+            {
+              path: '/salas/:idPublicacao/publicacoes/publicar',
+              name: 'sala-publicar',
+              component: () => import('../views/salas/publicacoes/PublicarView/index.vue'),
+            },
+            {
+              path: '/salas/:idSala/publicacoes/:idPublicacao',
+              name: 'visualizar-publicacao',
+              component: () => import('../views/salas/publicacoes/VisualizarDetalhesView/index.vue'),
+            },
+          ]
         },
       ]
     },

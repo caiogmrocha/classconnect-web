@@ -7,7 +7,6 @@ import { Separator } from '@/components/ui/separator'
 interface MailProps {
   defaultLayout?: number[]
   defaultCollapsed?: boolean
-  navCollapsedSize: number
 }
 
 const props = withDefaults(defineProps<MailProps>(), {
