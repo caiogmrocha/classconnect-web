@@ -51,8 +51,12 @@ onMounted(async () => {
     <main class="flex items-center justify-center flex-1 h-full p-5">
       <Card class="w-full max-w-[900px]">
         <CardHeader class="flex flex-row">
-          <span class="flex items-center justify-center bg-sky-600 rounded-full p-2 mr-3">
-            <Icon icon="fluent:content-view-28-regular" height="30px" class="text-white" />
+          <span class="flex items-center justify-center bg-red-600 rounded-full p-2 mr-4" v-if="publicacao?.dataEntrega">
+            <Icon icon="fluent:tasks-app-28-regular" height="36px" class="text-white" />
+          </span>
+
+          <span class="flex items-center justify-center bg-sky-600 rounded-full p-2 mr-4" v-else>
+            <Icon icon="fluent:content-view-28-regular" height="36px" class="text-white" />
           </span>
 
           <div>

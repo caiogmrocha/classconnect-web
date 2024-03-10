@@ -11,7 +11,7 @@ export type ListarPublicacoesResponse = {
     conteudo: string,
   }>,
   curtidas: number,
-  dataAtualizacao: number,
+  dataEntrega?: number,
   dataCadastro: number,
   professor: {
     nome: string,
@@ -57,6 +57,7 @@ export type BuscarPublicacaoPorIdResponse = {
 	id: number,
   titulo: string
   dataCadastro: number,
+  dataEntrega?: number,
 	comentarios: Array<any>,
 	curtidas: number,
 	conteudo: string,

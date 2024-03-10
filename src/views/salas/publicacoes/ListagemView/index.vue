@@ -58,7 +58,11 @@ onMounted(async () => {
         @click="router.push({ name: 'visualizar-publicacao', params: { idSala: route.params.idSala, idPublicacao: publicacao.id } })"
         class="flex flex-row items-center gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent cursor-pointer"
       >
-        <span class="flex items-center justify-center bg-sky-600 rounded-full p-2 mr-1">
+        <span class="flex items-center justify-center bg-red-600 rounded-full p-2 mr-1" v-if="publicacao.dataEntrega">
+          <Icon icon="fluent:tasks-app-28-regular" height="30px" class="text-white" />
+        </span>
+
+        <span class="flex items-center justify-center bg-sky-600 rounded-full p-2 mr-1" v-else>
           <Icon icon="fluent:content-view-28-regular" height="30px" class="text-white" />
         </span>
 
