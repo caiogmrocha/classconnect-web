@@ -53,7 +53,7 @@ const postFormSchema = toTypedSchema(z.object({
       .any()
       .refine((value?: File) => {
         if (!value) return true;
-        
+
         const acceptedFormats = [
           "text/plain",
           "text/html",
@@ -68,7 +68,7 @@ const postFormSchema = toTypedSchema(z.object({
           "application/vnd.ms-powerpoint",
           "application/vnd.openxmlformats-officedocument.presentationml.presentatio",
         ];
-        
+
         return acceptedFormats.includes(value.type);
       }, {
         message: 'O arquivo deve ser uma imagem PNG, JPEG, JPG, GIF, PDF, DOC, DOCX, XLS, XLSX, PPT ou PPTX.',
@@ -100,14 +100,14 @@ const route = useRoute();
 
 const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
-  
+
   try {
     const response = await publicacoesService.publicar({
       titulo: values.titulo,
       conteudo: values.conteudo,
       dataEntrega: values.dataEntrega,
       arquivos: values.arquivos || [],
-      idSala: +route.params.id,
+      idSala: +route.params.idPublicacao,
     })
 
     toast({ title: response.mensagem })
@@ -227,7 +227,7 @@ const onSubmit = handleSubmit(async (values) => {
           <FormMessage />
         </FormItem>
       </FormField>
-      
+
       <div class="flex gap-2 justify-start">
         <Button type="submit" :disabled="isLoading">
           <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
