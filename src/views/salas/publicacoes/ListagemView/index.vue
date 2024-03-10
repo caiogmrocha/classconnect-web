@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDistanceToNow } from 'date-fns'
+import { compareAsc, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -7,6 +7,7 @@ import { Icon } from '@iconify/vue';
 
 import { toast } from '@/components/ui/toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 import { type ListarPublicacoesResponse, publicacoesService } from '@/services/PublicacoesService';
 import { type ListarSalasResponse, salasService } from '@/services/SalasService';
 
@@ -56,9 +57,9 @@ onMounted(async () => {
         v-for="publicacao in publicacoes"
         :key="publicacao.id"
         @click="router.push({ name: 'visualizar-publicacao', params: { idSala: route.params.idSala, idPublicacao: publicacao.id } })"
-        class="flex flex-row items-center gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent cursor-pointer"
+        class="flex flex-row items-center gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent cursor-pointer "
       >
-        <span class="flex items-center justify-center bg-red-600 rounded-full p-2 mr-1" v-if="publicacao.dataEntrega">
+        <span class="flex items-center justify-center bg-yellow-600 rounded-full p-2 mr-1" v-if="publicacao.dataEntrega">
           <Icon icon="fluent:tasks-app-28-regular" height="30px" class="text-white" />
         </span>
 
@@ -71,11 +72,19 @@ onMounted(async () => {
             <div class="flex items-center gap-2">
               <div class="font-semibold">
                 {{ publicacao.titulo }}
+
+                <Badge
+                  v-if="publicacao.dataEntrega && compareAsc(new Date(publicacao.dataEntrega), new Date()) === -1"
+                  class="ml-2"
+                  variant="destructive"
+                >
+                  Atrasada
+                </Badge>
               </div>
               <span v-if="false" class="flex h-2 w-2 rounded-full bg-blue-600" />
             </div>
             <div class="ml-auto text-xs text-muted-foreground">
-              {{ formatDistanceToNow(new Date(), { addSuffix: true, locale: ptBR }) }}
+              {{ formatDistanceToNow(new Date(publicacao.dataCadastro), { addSuffix: true, locale: ptBR }) }}
             </div>
           </div>
 
