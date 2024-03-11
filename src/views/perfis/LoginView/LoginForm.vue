@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { perfisService } from '@/services/PerfisService'
+import { useRouter } from 'vue-router'
+import { toast } from '@/components/ui/toast'
 
 const isLoading = ref(false)
 
@@ -27,24 +29,37 @@ const { handleSubmit } = useForm({
   },
 })
 
+const router = useRouter();
+
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		const response = await perfisService.login({
+		await perfisService.login({
 			email: values.email,
 			senha: values.senha,
 		});
 
-		console.log(response);
+    toast({
+      title: 'Login realizado com sucesso',
+      description: 'Seja bem-vindo!',
+    });
+
+		router.push({ name: 'salas' });
 	} catch (error) {
 		switch (error.response?.status) {
 			case 403:
 			case 400:
-				alert('E-mail ou senha inválidos');
+
+        toast({
+          title: 'E-mail ou senha inválidos',
+        });
 				break;
 			default:
-				alert('Erro ao tentar fazer login');
+				toast({
+          title: 'Erro ao realizar login',
+          description: 'Ocorreu um erro ao realizar o login, tente novamente mais tarde.',
+        });
 				break;
 		}
 	} finally {

@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/toast';
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -6,15 +7,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => null,
-			beforeEnter: (to, from, next) => {
-				next('/login')
-			}
+      redirect: '/cadastrar'
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/perfis/LoginView/index.vue')
+      component: () => import('../views/perfis/LoginView/index.vue'),
     },
     {
       path: '/cadastrar',
@@ -59,5 +57,22 @@ const router = createRouter({
     },
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login', '/cadastrar'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('token');
+
+  if (authRequired && !loggedIn) {
+    toast({
+      title: 'Acesso negado',
+      description: 'Você precisa estar logado para acessar essa página',
+      variant: 'destructive'
+    })
+    return next('/login');
+  }
+
+  next();
+});
 
 export default router

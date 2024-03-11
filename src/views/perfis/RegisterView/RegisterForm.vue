@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import router from '@/router'
 import { perfisService } from '@/services/PerfisService'
+import { toast } from '@/components/ui/toast'
 
 const isLoading = ref(false)
 
@@ -44,7 +45,9 @@ const onSubmit = handleSubmit(async (values) => {
 			tipoPerfil: values.tipoPerfil,
 		});
 
-		alert(response.mensagem);
+		toast({
+      title: response.mensagem
+    });
 
 		router.push({ name: 'login' });
 	} catch (error: any) {

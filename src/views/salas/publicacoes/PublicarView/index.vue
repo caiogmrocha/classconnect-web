@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { CalendarIcon, Loader2 } from 'lucide-vue-next'
 import { publicacoesService } from '@/services/PublicacoesService'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Popover from '@/components/ui/popover/Popover.vue'
 import PopoverTrigger from '@/components/ui/popover/PopoverTrigger.vue'
 import { cn } from '@/lib/utils'
@@ -97,6 +97,7 @@ const { handleSubmit } = useForm({
 const isLoading = ref(false)
 
 const route = useRoute();
+const router = useRouter();
 
 const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
@@ -107,10 +108,12 @@ const onSubmit = handleSubmit(async (values) => {
       conteudo: values.conteudo,
       dataEntrega: values.dataEntrega,
       arquivos: values.arquivos || [],
-      idSala: +route.params.idPublicacao,
+      idSala: +route.params.idSala,
     })
 
     toast({ title: response.mensagem })
+
+    router.push({ name: 'publicacoes', params: { idSala: route.params.idSala } })
   } catch (error: any) {
     if (error.response?.status === 400) {
       return toast({ title: error.response.data.mensagem, variant: 'destructive' })

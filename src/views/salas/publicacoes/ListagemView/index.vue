@@ -10,6 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { type ListarPublicacoesResponse, publicacoesService } from '@/services/PublicacoesService';
 import { type ListarSalasResponse, salasService } from '@/services/SalasService';
+import Button from '@/components/ui/button/Button.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -41,7 +42,11 @@ onMounted(async () => {
 
 <template>
   <ScrollArea class="flex flex-1 h-screen w-full">
-    <header class="h-60 bg-[url('/src/assets/images/classroom-banner.jpg')]">
+    <header class="h-60 bg-[url('/src/assets/images/classroom-banner.jpg')] relative">
+      <Button class="absolute top-4 right-4" @click="router.push({ name: 'publicar', params: { idSala: route.params.idSala } })">
+        Cadastrar Publicação
+      </Button>
+
       <div class="flex flex-col items-center justify-center h-full w-full bg-black bg-opacity-50">
         <div class="text-4xl font-semibold text-white">
           {{ sala?.nome }}
@@ -91,6 +96,10 @@ onMounted(async () => {
           <div class="line-clamp-2 text-xs text-muted-foreground" v-html="publicacao.conteudo">
           </div>
         </div>
+      </div>
+
+      <div v-if="publicacoes.length === 0" class="flex items-center justify-center">
+        <p class="text-2xl font-bold text-muted-foreground">Nenhuma publicação cadastrada</p>
       </div>
     </main>
   </ScrollArea>
